@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MonkeyShop</title>
+  <link rel="icon" href="./logo.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <style>
+    .title-success, .description-success {
+      border: 2px solid #28a745;
+    }
+    .title-error {
+      border: 2px solid #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <!-- Start -->
+    <div class="mt-5">
+      <a href="./frame.html">Khung ảnh</a>
+      <h3>Tên sản phẩm ({{ title.length }}/40)</h3>
+      <div class="title title-success mb-1" v-bind:class="{ 'title-error': title.length > 40 }">
+        <textarea class="form-control" rows="3" v-model="title" id="title"></textarea>
+      </div>
+      <button class="btn btn-success" type="button" :disabled="title.length == 0" v-on:click="copy('title')">Copy</button>
+      <!-- Chọn dòng sản phẩm -->
+      <div>
+        <h5>1. Chọn dòng sản phẩm</h5>
+        <select class="form-select" v-model="product.model">
+          <option value="">Không chọn</option>
+          <option v-for="model in options.models" :key="model">{{ model }}</option>
+        </select>
+      </div>
+      <!-- Chọn loại sản phẩm -->
+      <div>
+        <h5>2. Chọn loại sản phẩm <span class="text-danger">*</span></h5>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="type" id="type1" value="ケース" v-model="product.type">
+          <label class="form-check-label" for="type1">
+            Ốp lưng/case
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="type" id="type2" value="強化ガラス" v-model="product.type">
+          <label class="form-check-label" for="type2">
+            Kính cường lực
+          </label>
+        </div>
+      </div>
+      <!-- Chọn thuộc tính -->
+      <div>
+        <h5>3. Chọn thuộc tính</h5>
+        <div class="row">
+          <div class="col-6">
+            <div class="list-group">
+              <label class="list-group-item" v-for="(prop, i) in options.properties" :key="prop.text"
+                v-if="(i <= Math.round(options.properties.length - 1) / 2)">
+                <input class="form-check-input me-1" type="checkbox" :value="prop.value" v-model="product.properties">
+                {{ prop.text }}
+              </label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="list-group">
+              <label class="list-group-item" v-for="(prop, i) in options.properties" :key="prop.text"
+                v-if="(i > Math.round(options.properties.length - 1) / 2)">
+                <input class="form-check-input me-1" type="checkbox" :value="prop.value" v-model="product.properties">
+                {{ prop.text }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Chọn màu sắc-->
+      <div>
+        <h5>3. Chọn màu sắc</h5>
+        <select class="form-select" v-model="product.color">
+          <option value="">Không chọn</option>
+          <option v-for="color in options.colors" :key="color.text" :value="color.value">{{ color.color + color.text }}</option>
+        </select>
+      </div>
+    </div>
+    <!-- End -->
+
+    <!-- Start -->
+    <div class="mt-5 mb-5">
+      <h3 class="d-inline">Giới thiệu sản phẩm</h3>
+      <div class="description-success mb-1">
+        <textarea class="form-control" :rows="descriptionRow" v-model="description" id="description"></textarea>
+      </div>
+      <button class="btn btn-success" type="button" :disabled="description.length == 0" v-on:click="copy('description')">Copy</button>
+      <!-- Chọn màu sắc-->
+      <div>
+        <h5>1. Chọn màu sắc</h5>
+        <div class="row">
+          <div class="col-6">
+            <div class="list-group">
+              <label class="list-group-item" v-for="(color, i) in options.colors" :key="color.text"
+                v-if="(i <= Math.round(options.colors.length - 1) / 2)">
+                <input class="form-check-input me-1" type="checkbox" :value="color.value" v-model="product.availableColors">
+                {{ color.color + color.text }}
+              </label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="list-group">
+              <label class="list-group-item" v-for="(color, i) in options.colors" :key="color.text"
+                v-if="(i > Math.round(options.colors.length - 1) / 2)">
+                <input class="form-check-input me-1" type="checkbox" :value="color.value" v-model="product.availableColors">
+                {{ color.color + color.text }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End -->
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        title: 'ケース',
+        product: {
+          type: 'ケース',
+          model: '',
+          color: '',
+          properties: [],
+          availableColors: []
+        },
+        options: {
+          models: ['iPhone13ProMax', 'iPhone13Pro', 'iPhone13Mini', 'iPhone13', 'iPhone12ProMax', 'iPhone12Pro', 'iPhone12Mini', 'iPhone12','iPhone11ProMax', 'iPhone11Pro', 'iPhone11', 'iPhoneXsMax', 'iPhoneXs', 'iPhoneXr', 'iPhoneX', 'iPhone8Plus', 'iPhone8', 'iPhone7Plus', 'iPhone7'],
+          colors: [
+            { text: 'Xanh nước biển', value: 'ブルー', color: '🟦' },
+            { text: 'Xanh lá cây', value: 'グリーン', color: '🟩' },
+            { text: 'Đỏ', value: 'レッド', color: '🟥' },
+            { text: 'Tím', value: 'バイオレット', color: '🟪' },
+            { text: 'Vàng', value: 'イェロー', color: '🟨' },
+            { text: 'Hồng', value: 'ピンク', color: '' },
+            { text: 'Cam', value: 'オレンジ', color: '🟧' },
+            { text: 'Nâu', value: 'ブラウン', color: '🟫' },
+            { text: 'Đen', value: 'ブラック', color: '⬛' },
+            { text: 'Trắng', value: 'ホワイト', color: '⬜' },
+          ],
+          properties: [
+            { text: 'Cao cấp', value: '高級' },
+            { text: 'Trending', value: 'お洒落' },
+            { text: 'Đáng yêu', value: '可愛い' },
+            { text: 'Được ưa chuộng', value: '大人気' },
+            { text: 'Trong suốt', value: '透明' },
+            { text: 'Chống ố vàng', value: '耐黄変' },
+            { text: 'Chống va đập', value: '耐衝撃' },
+            { text: 'Ngăn dấu vân tay', value: '指紋防止' },
+            { text: 'Hình sổ tay', value: '手帳型' },
+            { text: 'Nhẹ', value: '軽量' },
+            { text: 'Có ring', value: 'リング付き' },
+            { text: 'Hàn Quốc', value: '韓国' },
+            { text: 'Chất liệu TPU mềm', value: 'TPU ソフト' },
+          ]
+        }
+      },
+      methods: {
+        copy(id) {
+          /* Get the text field */
+          var copyText = document.getElementById(id);
+
+          /* Select the text field */
+          copyText.select();
+          copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+          /* Copy the text inside the text field */
+          navigator.clipboard.writeText(copyText.value);
+        }
+      },
+      computed: {
+        descriptionRow: function () {
+          return this.description.split('\n').length + 1;
+        },
+        description: {
+          get: function () {
+            let tags = ['MonkeyShop', this.product.type, 'iPhone用ケース', 'スマホアクセサリー'];
+            tags = tags.concat(this.product.properties.slice());
+            tags = tags.concat(this.options.models.slice());
+            let description = genDescription(this.title, tags, this.product.availableColors);
+            return description;
+          },
+          set: function (newVal) {
+
+          }
+        }
+      },
+      watch: {
+        product: {
+          handler () {
+            let title = '';
+            if (this.product.model) {
+              title += this.product.model + '用';
+            }
+            title += this.product.type;
+            if (this.product.properties.length > 0) {
+              title += '✨';
+              title += this.product.properties.join('✨');
+            }
+            if (this.product.color) {
+              title += '　' + this.product.color;
+            }
+            this.title = title;
+          },
+          deep: true
+        }
+      }
+    })
+    function genDescription(title = '', tags = [], availableColors = []) {
+      let description = `☘️ۣۜMonkeyۣۜShop☘️
+#iPhoneアクセサリー
+ご覧頂きありがとうございます♪
+
+✅ ${title}
+・100% 新品未使用
+・1~2日で発送
+
+✅ 在庫
+・7-8-Se世代2/7-8Plus
+・X-Xs-Xr-XsMax
+・11-11Pro-11ProMax
+・12-12Pro-12Mini-12ProMax
+・13-13Pro-13Mini-13ProMax
+`;
+      if (availableColors.length > 0) {
+        description += '・カラー：' + availableColors.join('、') + '\n';
+      }
+      description += `
+ご購入後にコメントにて機種、カラー確認をお願い致します。
+可能な限り早急に回答致します。
+
+---------ご購入時注意事項--------- 
+● 海外インポート品のため、日本の品質と比べて劣る場合があります。ご理解いただける方のみご購入ください。ノーブランドです。
+● 品物の色合いは、写真撮影やご利用のモニター環境の違いにより、若干異なる場合がございます。予めご了承下さい。
+
+大人気商品のため、お早めにお求めください。よろしくお願い致します。`;
+        tags.forEach((tag, i) => {
+          if (i == 0) {
+            description += '\n\n';
+          }
+          description += '#' + tag + ' ';
+        });
+
+        return description;
+    }
+  </script>
+</body>
+</html>
