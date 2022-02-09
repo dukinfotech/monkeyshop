@@ -7,6 +7,16 @@
   <title>MonkeyShop</title>
   <link rel="icon" href="./logo.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    #frame {
+      width: 300px;
+      height: 300px;
+      border: 13px solid #ff333f;
+      box-shadow: rgba(0, 0, 0, .6) 2.4px 2.4px 3.2px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -14,20 +24,32 @@
       <a href="./index.html">Tạo sản phẩm</a>
       <div class="row">
         <div class="col-4 text-center">
-          <img src="./khungmonkeyshop.png" alt="" height="150">
+          <img src="./public/img/khungdo.png" alt="" height="150">
           <div class="d-block">
-            <a href="./khungmonkeyshop.png" download="khungmonkeyshop.png">Tải về</a>
-            <a href="./khungmonkeyshop.psd" download="khungmonkeyshop.psd">PSD</a>
+            <a href="./public/img/khungdo.png" download="khungdo.png">Tải về</a>
+            <a href="./public/img/khungmonkeyshop.psd" download="khungmonkeyshop.psd">PSD</a>
           </div>
         </div>
         <div class="col-4 text-center">
-          <img src="./monkeyshop.png" alt="" height="150">
+          <img src="./public/img/monkeyshop.png" alt="" height="150">
           <div class="d-block">
-            <a href="./monkeyshop.png" download="monkeyshop.png">Tải về</a>
+            <a href="./public/img/monkeyshop.png" download="monkeyshop.png">Tải về</a>
           </div>
         </div>
       </div>
+      <textarea name="" id="" cols="30" rows="10">
+        var images = document.querySelectorAll('mer-item-thumbnail');
+        images.forEach((img) => {
+          if (img.getAttribute('data-testid')) {
+            console.log(img.getAttribute('src'));
+          }
+         })
+      </textarea>
+    </div>
+    <div id="frame">
+
     </div>
   </div>
+  <script src="./bower_components/dom-to-image/dist/dom-to-image.min.js"></script>
 </body>
 </html>

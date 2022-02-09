@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "vue-gsheets": "^4.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.0",
+    "@babel/core": "^7.17.0"
+  }
+}
