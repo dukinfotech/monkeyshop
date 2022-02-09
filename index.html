@@ -204,7 +204,7 @@
         },
         description: {
           get: function () {
-            let tags = ['MonkeyShop', this.product.type, 'iPhone用ケース', 'スマホアクセサリー'];
+            let tags = ['MonkeyShop', this.product.type, 'スマホアクセサリー'];
             tags = tags.concat(this.product.properties.slice());
             tags = tags.concat(this.options.models.slice());
             let description = genDescription(this.title, tags, this.product.availableColors);
@@ -238,7 +238,7 @@
     })
     function genDescription(title = '', tags = [], availableColors = []) {
       let description = `☘️ۣۜMonkeyۣۜShop☘️
-#iPhoneアクセサリー
+#Monkeyのアクセサリー
 ご覧頂きありがとうございます♪
 
 ✅ ${title}
